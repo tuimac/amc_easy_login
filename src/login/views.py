@@ -8,7 +8,7 @@ import json
 def login(request):
     # Initialization 
     sts = boto3.client('sts')
-    session_time = 3600
+    session_time = 24 * 60 * 60
     django_url = 'http://localhost:8000'
 
     # Get signin token
@@ -24,7 +24,7 @@ def login(request):
         'sessionToken': credentials['SessionToken']
     }
 
-    url = f'https://signin.aws.amazon.com/federation?Action=getSigninToken&SessionDuration={str(session_time)}&Session={urllib.parse.quote_plus(json.dumps(urlCredentials))}'
+    url = f'https://signin.aws.amazon.com/federation?Action=getSigninToken&&Session={urllib.parse.quote_plus(json.dumps(urlCredentials))}'
 
     http = urllib3.PoolManager()
     signin_token = json.loads(http.request('GET', url).data.decode())['SigninToken']
